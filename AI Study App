@@ -1,0 +1,84 @@
+import streamlit as st
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import torch
+import torch.nn as nn
+
+# --- APP CONFIG ---
+st.set_page_config(page_title="Neural Path: AI Academy", layout="wide")
+
+# --- SIDEBAR NAVIGATION ---
+st.sidebar.title("🚀 Neural Path")
+st.sidebar.markdown("Master the stack from Python to Deep Learning.")
+choice = st.sidebar.radio("Go to Module:", 
+    ["1. Python Fundamentals", "2. Scikit-Learn (ML)", "3. PyTorch (DL)"])
+
+# --- MODULE 1: PYTHON ---
+if choice == "1. Python Fundamentals":
+    st.header("🐍 Module 1: Core Python")
+    st.write("Before we build models, we must master the data structures.")
+    
+    with st.expander("Exercise: List Comprehensions"):
+        st.code("""# Transform a list of numbers into their squares
+numbers = [1, 2, 3, 4]
+squares = [x**2 for x in numbers]
+print(squares) # [1, 4, 9, 16]""", language='python')
+        
+    st.info("💡 **Challenge:** Write a function that filters out odd numbers from a list.")
+
+# --- MODULE 2: SCIKIT-LEARN ---
+elif choice == "2. Scikit-Learn (ML)":
+    st.header("🤖 Module 2: Machine Learning with Scikit-Learn")
+    st.write("Transitioning from logic to 'Learning' from data.")
+
+    # Interactive Example
+    st.subheader("Interactive Linear Regression")
+    val = st.slider("Select an input value (X) to predict (y = 2x):", 0, 100, 5)
+    
+    # Simple Model Logic
+    X_train = np.array([[1], [2], [3], [4], [5]])
+    y_train = np.array([2, 4, 6, 8, 10])
+    model = LinearRegression().fit(X_train, y_train)
+    prediction = model.predict([[val]])
+
+    st.success(f"The model predicts: **{prediction[0]:.2f}**")
+    
+    # Visualizing the fit
+    chart_data = pd.DataFrame({
+        'X': X_train.flatten(),
+        'y': y_train
+    })
+    st.scatter_chart(chart_data, x='X', y='y')
+
+# --- MODULE 3: PYTORCH ---
+elif choice == "3. PyTorch (DL)":
+    st.header("🔥 Module 3: Deep Learning with PyTorch")
+    st.write("Defining the architecture of a Neural Network.")
+
+    st.markdown("""
+    In PyTorch, we define models as classes inheriting from `nn.Module`. 
+    This gives us full control over the **Forward Pass**.
+    """)
+
+    code_snippet = """
+class SimpleNet(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.layer = nn.Linear(1, 1) # 1 Input, 1 Output
+        
+    def forward(self, x):
+        return self.layer(x)
+
+model = SimpleNet()
+print(model)
+    """
+    st.code(code_snippet, language='python')
+
+    if st.button("Initialize Neural Network"):
+        net = nn.Linear(1, 1)
+        st.write("Network weights initialized to:", net.weight.item())
+
+# --- FOOTER ---
+st.divider()
+st.caption("Neural Path v1.0 | Keep coding, keep learning.")
